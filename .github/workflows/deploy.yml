@@ -1,0 +1,40 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: |
+          syncup-backend/package-lock.json
+          syncup-frontend/package-lock.json
+    
+    - name: Build backend
+      run: |
+        cd syncup-backend
+        npm ci
+        npm run build
+    
+    - name: Build frontend
+      run: |
+        cd syncup-frontend
+        npm ci
+        npm run build
+    
+    # TODO: Add AWS deployment steps
+    # - name: Deploy to AWS
+    #   run: |
+    #     # Backend: Deploy to AWS Elastic Beanstalk or Lambda
+    #     # Frontend: Deploy to AWS S3 + CloudFront
+    #     echo "AWS deployment configuration needed"
